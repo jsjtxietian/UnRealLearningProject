@@ -12,11 +12,20 @@ class PROJECT_API AFloatingActor : public AActor
 	GENERATED_BODY()
 	
 public:	
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FloatingActor")
+    float FloatSpeed = 20.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="FloatingActor")
+    float RotationSpeed = 20.0f;
+	
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* VisualMesh;
+
 	// Sets default values for this actor's properties
 	AFloatingActor();
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* VisualMesh;
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit);
 
 protected:
 	// Called when the game starts or when spawned
