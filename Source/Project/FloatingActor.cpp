@@ -10,7 +10,7 @@ AFloatingActor::AFloatingActor()
 	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	VisualMesh->SetupAttachment(RootComponent);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere"));
 
 	if (CubeVisualAsset.Succeeded())
 	{
@@ -32,18 +32,30 @@ void AFloatingActor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
 	FVector NewLocation = GetActorLocation();
-	FRotator NewRotation = GetActorRotation();
-	float RunningTime = GetGameTimeSinceCreation();
-	float DeltaHeight = (FMath::Sin(RunningTime + DeltaTime) - FMath::Sin(RunningTime));
-	NewLocation.Z += DeltaHeight * FloatSpeed;		 //Scale our height by FloatSpeed
-	float DeltaRotation = DeltaTime * RotationSpeed; //Rotate by a number of degrees equal to RotationSpeed each second
-	NewRotation.Yaw += DeltaRotation;
-	SetActorLocationAndRotation(NewLocation, NewRotation);
+	NewLocation.X += DeltaTime * FloatSpeed;
+	SetActorLocation(NewLocation, true);
 }
 
 void AFloatingActor::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Hit!!!"));
+	auto name = OtherActor->GetName();
+
+	if (name.Contains("Target"))
+	{
+		if (name.Contains("Center"))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score1));
+		}
+		else if (name.Contains("1"))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score2));
+		}
+		else
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score3));
+		}
+		this->Destroy();
+	}
+	return;
 }
