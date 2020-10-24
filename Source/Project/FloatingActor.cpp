@@ -20,6 +20,13 @@ AFloatingActor::AFloatingActor()
 	}
 }
 
+AFloatingActor* AFloatingActor::CreateBullet()
+{
+	UWorld* World = this->GetWorld();
+	return World->SpawnActor<AFloatingActor>(GetActorLocation(),GetActorRotation());
+}
+
+
 // Called when the game starts or when spawned
 void AFloatingActor::BeginPlay()
 {
