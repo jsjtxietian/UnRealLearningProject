@@ -1,6 +1,7 @@
 #include "Fire.h"
 #include "Projectile.h"
 #include "GameFramework/Actor.h"
+#include "Components/InputComponent.h"
 
 // Sets default values for this component's properties
 UFire::UFire()
@@ -19,7 +20,7 @@ void UFire::BeginPlay()
 	Super::BeginPlay();
 
 	auto Input = this->GetOwner()->FindComponentByClass<UInputComponent>();
-	Input->BindAction("Jump", IE_Pressed, this, &UFire::Fire);
+	Input->BindAction("Fire", IE_Pressed, this, &UFire::Fire);
 
 	GetOwner()->Tags.AddUnique(TEXT("Player"));
 
@@ -28,7 +29,7 @@ void UFire::BeginPlay()
 
 void UFire::Fire()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Fire!!! Total score %f"),totalScore));
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Fire!!! Total score %f"),totalScore));
 
 	// Attempt to fire a projectile.
 	// Get the camera transform.
