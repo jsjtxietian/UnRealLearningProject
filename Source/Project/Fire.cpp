@@ -29,7 +29,8 @@ void UFire::BeginPlay()
 
 void UFire::Fire()
 {
-	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Fire!!! Total score %f"),totalScore));
+	if (!InPlay)
+		return;
 
 	// Attempt to fire a projectile.
 	// Get the camera transform.
