@@ -4,6 +4,8 @@
 #include "Components/TextRenderComponent.h"
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameUserWidget.h"
+#include "TimerManager.h"
 #include "CountDown.generated.h"
 
 UCLASS()
@@ -18,6 +20,11 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 CountdownTime;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets") 
+	TSubclassOf<UGameUserWidget> GameUIType;
+
+	UGameUserWidget* GameUI;
+
 	void CountdownHasFinished();
 
 	UTextRenderComponent* CountdownText;
@@ -25,7 +32,6 @@ public:
 
 	void UpdateTimerDisplay();
 	void AdvanceTimer();
-
 
 protected:
 	// Called when the game starts or when spawned

@@ -1,6 +1,10 @@
 #include "CountDown.h"
 #include "Fire.h"
 #include "EngineUtils.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
+#include "Blueprint/UserWidget.h"
+#include "SaveScore.h"
 
 // Sets default values
 ACountDown::ACountDown()
@@ -11,7 +15,7 @@ ACountDown::ACountDown()
     CountdownText->SetHorizontalAlignment(EHTA_Center);
     CountdownText->SetWorldSize(150.0f);
     RootComponent = CountdownText;
-    CountdownTime = 3;
+    CountdownTime = 10;
 }
 
 void ACountDown::UpdateTimerDisplay()
@@ -36,15 +40,22 @@ void ACountDown::CountdownHasFinished()
     //Change to a special readout
     CountdownText->SetText(TEXT("Game Over!"));
 
-    for (TActorIterator<AActor> It(GetWorld()); It; ++It)
-    {
-        AActor* Actor = *It;
-        if (Actor->ActorHasTag(FName(TEXT("Player"))))
-        {
-            auto Fire = Actor->FindComponentByClass<UFire>();
-            Fire->InPlay = false;
+    auto FireComponent = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->FindComponentByClass<UFire>();
+    FireComponent->InPlay = false;
+
+	if (USaveScore* SaveGameInstance = Cast<USaveScore>(UGameplayStatics::CreateSaveGameObject(USaveScore::StaticClass())))
+	{
+		// Set data on the savegame object.
+		SaveGameInstance->PlayerName = GameUI->NameInput->Text.ToString();
+		SaveGameInstance->PlayerScore = FireComponent->totalScore;
+
+		// Save the data immediately.
+		if (UGameplayStatics::SaveGameToSlot(SaveGameInstance, FString::FromInt(0),0))
+		{
+            GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString("Save Succeed!"));
+            //here
         }
-    }
+	}
 }
 
 // Called when the game starts or when spawned
@@ -53,6 +64,10 @@ void ACountDown::BeginPlay()
 	Super::BeginPlay();
     UpdateTimerDisplay();
     GetWorldTimerManager().SetTimer(CountdownTimerHandle, this, &ACountDown::AdvanceTimer, 1.0f, true);
+
+    GameUI = Cast<UGameUserWidget>(CreateWidget(UGameplayStatics::GetPlayerController(GetWorld(), 0), GameUIType));
+    GameUI->AddToViewport();
+
 }
 
 // Called every frame

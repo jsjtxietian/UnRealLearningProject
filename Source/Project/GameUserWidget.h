@@ -7,6 +7,8 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/EditableText.h"
+#include "GameFramework/Character.h"
 #include "GameUserWidget.generated.h"
 
 /**
@@ -27,7 +29,10 @@ public:
 	class UButton* JumpButton;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* ItemTitle;
+	class UTextBlock* ScoreText;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+	class UEditableText* NameInput;
 
 	// Optionally override the Blueprint "Event Construct" event
 	virtual void NativeConstruct() override;
@@ -43,4 +48,5 @@ public:
 
 private:
 	UFire* FireComponent;
+	ACharacter* myCharacter;
 };
