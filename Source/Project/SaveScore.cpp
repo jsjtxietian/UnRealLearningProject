@@ -5,5 +5,4 @@
 
 USaveScore::USaveScore()
 {
-
 }

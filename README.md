@@ -1,5 +1,9 @@
 # Unreal Course Homework
 
+#### todo
+
+得分迁移到player state之类，更UE的写法
+
 #### hw1
 
 * 编译UE4，参考官方资料&课件完成。其中安装SetupAndroid部分脚本报错，参考该链接 https://answers.unrealengine.com/questions/963972/why-is-setupandroidbat-failing-with-default-setup.html 在脚本前后加入以下语句可解决。
@@ -17,6 +21,12 @@
 * 完成了射击相关的函数逻辑，按音量+可以发射出圆形的子弹，击中靶子相应区域可以得分，显示在HUD上
 * 视频和apk见最新的release，HW2。 https://github.com/jsjtxietian/UnRealLearningProject/releases/tag/HW2
 
+#### hw3
+
+* 完成了跳跃、射击的button
+* 完成了展示个人avatar、得分的UI
+* 可以保存得分（自定义结构的序列化有点问题，所以没做排行面板）
+* 视频和apk见最新的release，HW3。
 
 
-todo:迁移到player state之类
+
