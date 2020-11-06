@@ -26,7 +26,7 @@
 * 完成了跳跃、射击的button
 * 完成了展示个人avatar、得分的UI
 * 可以保存得分（自定义结构的序列化有点问题，所以没做排行面板）
-* 视频和apk见最新的release，HW3。
+* 视频和apk见最新的release，HW3。 https://github.com/jsjtxietian/UnRealLearningProject/releases/tag/HW3
 
 
 
