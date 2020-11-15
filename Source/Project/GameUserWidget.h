@@ -47,6 +47,6 @@ public:
 	void Jump();
 
 private:
+	ACharacter* MyCharacter;
 	UFire* FireComponent;
-	ACharacter* myCharacter;
 };

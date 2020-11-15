@@ -4,7 +4,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "Blueprint/UserWidget.h"
-#include "SaveScore.h"
 
 // Sets default values
 ACountDown::ACountDown()

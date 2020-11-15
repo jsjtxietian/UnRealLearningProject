@@ -3,11 +3,14 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Engine/StaticMesh.h"
+#include "GameFramework/PlayerState.h"
+#include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AProjectile::AProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
@@ -37,7 +40,7 @@ AProjectile::AProjectile()
 }
 
 // Function that initializes the projectile's velocity in the shoot direction.
-void AProjectile::FireInDirection(const FVector& ShootDirection)
+void AProjectile::FireInDirection(const FVector &ShootDirection)
 {
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
@@ -54,28 +57,29 @@ void AProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
+void AProjectile::OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpulse, const FHitResult &Hit)
 {
 	auto name = OtherActor->GetName();
+	auto Player = UGameplayStatics::GetPlayerCharacter(GetOwner()->GetWorld(), 0)->GetPlayerState();
 
 	if (name.Contains("Target"))
 	{
 		if (name.Contains("Center"))
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score1));
-			GetOwner()->FindComponentByClass<UFire>()->GetScore(Score1);
+			Player->SetScore(Player->GetScore() + Score1);
 		}
 		else if (name.Contains("1"))
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score2));
-			GetOwner()->FindComponentByClass<UFire>()->GetScore(Score2);
+			Player->SetScore(Player->GetScore() + Score1);
 		}
 		else
 		{
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score3));
-			GetOwner()->FindComponentByClass<UFire>()->GetScore(Score3);
+			Player->SetScore(Player->GetScore() + Score1);
 		}
+		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Player->GetScore()));
 	}
 	this->Destroy();
 }
-
