@@ -29,9 +29,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 
-	float totalScore;
 	bool InPlay = true;
 
-	// Function that initializes the projectile's velocity in the shoot direction.
-	void GetScore(float score) { totalScore += score; }
 };

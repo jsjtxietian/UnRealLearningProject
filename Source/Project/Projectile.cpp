@@ -30,17 +30,23 @@ AProjectile::AProjectile()
 	// Use this component to drive this projectile's movement.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(VisualMesh);
-	ProjectileMovementComponent->InitialSpeed = 1500.0f;
+	ProjectileMovementComponent->InitialSpeed = 2000.0f;
 	ProjectileMovementComponent->MaxSpeed = 3000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
 
+	static ConstructorHelpers::FObjectFinder<UParticleSystem> PS(TEXT("/Game/StarterContent/Particles/P_Explosion"));
+	if (PS.Succeeded())
+	{
+		ExplosionEffect = PS.Object;
+	}
+
 	SetActorScale3D(FVector(0.2f, 0.2f, 0.2f));
 }
 
 // Function that initializes the projectile's velocity in the shoot direction.
-void AProjectile::FireInDirection(const FVector &ShootDirection)
+void AProjectile::FireInDirection(const FVector& ShootDirection)
 {
 	ProjectileMovementComponent->Velocity = ShootDirection * ProjectileMovementComponent->InitialSpeed;
 }
@@ -57,7 +63,7 @@ void AProjectile::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AProjectile::OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, UPrimitiveComponent *OtherComponent, FVector NormalImpulse, const FHitResult &Hit)
+void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	auto name = OtherActor->GetName();
 	auto Player = UGameplayStatics::GetPlayerCharacter(GetOwner()->GetWorld(), 0)->GetPlayerState();
@@ -79,7 +85,7 @@ void AProjectile::OnHit(UPrimitiveComponent *HitComponent, AActor *OtherActor, U
 			//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Score3));
 			Player->SetScore(Player->GetScore() + Score1);
 		}
-		//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::Printf(TEXT("Hit ~ %f"), Player->GetScore()));
+		UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionEffect, GetActorLocation());
 	}
 	this->Destroy();
 }

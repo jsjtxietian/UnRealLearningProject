@@ -1,13 +1,11 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Particles/ParticleSystem.h"
 #include "Projectile.generated.h"
-
 
 UCLASS()
 class PROJECT_API AProjectile : public AActor
@@ -37,14 +35,17 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = Movement)
 		UProjectileMovementComponent* ProjectileMovementComponent;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FloatingActor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 		float Score1 = 30.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FloatingActor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 		float Score2 = 20.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "FloatingActor")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 		float Score3 = 10.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+		UParticleSystem* ExplosionEffect;
 
 	// Function that initializes the projectile's velocity in the shoot direction.
 	void FireInDirection(const FVector& ShootDirection);

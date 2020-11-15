@@ -24,7 +24,6 @@ void UFire::BeginPlay()
 
 	GetOwner()->Tags.AddUnique(TEXT("Player"));
 
-	totalScore = 0;
 }
 
 void UFire::Fire()
