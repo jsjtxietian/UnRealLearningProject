@@ -4,6 +4,12 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
 #include "Blueprint/UserWidget.h"
+#include "NameScore.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/PlayerState.h"
+#include "Kismet/GameplayStatics.h"
+
+struct FSingle;
 
 // Sets default values
 ACountDown::ACountDown()
@@ -42,35 +48,34 @@ void ACountDown::CountdownHasFinished()
 	auto FireComponent = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->FindComponentByClass<UFire>();
 	FireComponent->InPlay = false;
 
-	//FString SlotName = FString::FromInt(0);
+	const FString SlotName = FString::FromInt(0);
 
-	//// load
-	//if (USaveScore* LoadedGame = Cast<USaveScore>(UGameplayStatics::LoadGameFromSlot(SlotName, 0)))
-	//{
-	//	// The operation was successful, so LoadedGame now contains the data we saved earlier.
-	//	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Load Success"));
 
-	//	//save
-	//	if (USaveScore* SaveGameInstance = Cast<USaveScore>(UGameplayStatics::CreateSaveGameObject(USaveScore::StaticClass())))
-	//	{
-	//		// Set data on the savegame object.
-	//		USaveData* currentInfo = NewObject<USaveData>();
-	//		currentInfo->PlayerName = GameUI->NameInput->Text.ToString();
-	//		currentInfo->PlayerScore = FireComponent->totalScore;
-	//		SaveGameInstance->Saves.Add(currentInfo);
+	if (UNameScore* LoadedGame = Cast<UNameScore>(UGameplayStatics::LoadGameFromSlot(SlotName, 0)))
+	{
+		// The operation was successful, so LoadedGame now contains the data we saved earlier.
+		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Load Success"));
 
-	//		/*SaveGameInstance->Saves.Sort([](USaveData* A, USaveData* B) {
-	//			return A->PlayerScore > B->PlayerScore;
-	//		});*/
+		//if (UNameScore* SaveGameInstance = Cast<UNameScore>(UGameplayStatics::CreateSaveGameObject(UNameScore::StaticClass())))
+		//{
+			// Set data on the savegame object.
+		FSingle Current;
+		Current.PlayerName = GameUI->NameInput->Text.ToString();
+		Current.PlayerScore = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetPlayerState()->GetScore();
+		LoadedGame->Saves.Add(Current);
 
-	//		// Save the data immediately.
-	//		if (UGameplayStatics::SaveGameToSlot(SaveGameInstance, SlotName, 0))
-	//		{
-	//			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::SanitizeFloat(SaveGameInstance->Saves[0]->PlayerScore));
-	//			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::SanitizeFloat(SaveGameInstance->Saves.Last()->PlayerScore));
-	//		}
-	//	}
-	//}
+		/*SaveGameInstance->Saves.Sort([](USaveData* A, USaveData* B) {
+			return A->PlayerScore > B->PlayerScore;
+		});*/
+
+		// Save the data immediately.
+		if (UGameplayStatics::SaveGameToSlot(LoadedGame, SlotName, 0))
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::SanitizeFloat(LoadedGame->Saves[0].PlayerScore));
+			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::SanitizeFloat(LoadedGame->Saves.Last().PlayerScore));
+		}
+		//}
+	}
 
 }
 
