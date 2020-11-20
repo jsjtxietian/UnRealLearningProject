@@ -4,16 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "Fire.h"
+#include "SingleScore.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/TextBlock.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/EditableText.h"
+#include "Components/VerticalBox.h"
 #include "GameFramework/Character.h"
 #include "GameUserWidget.generated.h"
 
-/**
- *
- */
+struct FSingle;
+
 UCLASS()
 class PROJECT_API UGameUserWidget : public UUserWidget
 {
@@ -23,17 +25,30 @@ public:
 	UGameUserWidget(const FObjectInitializer& ObjectInitializer);
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* ShootButton;
+		class UButton* ShootButton;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UButton* JumpButton;
+		class UButton* JumpButton;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UTextBlock* ScoreText;
+		class UTextBlock* ScoreText;
 
 	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
-	class UEditableText* NameInput;
+		class UEditableText* NameInput;
 
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UVerticalBox* ScoreArea;
+
+	UPROPERTY(BlueprintReadWrite, meta = (BindWidget))
+		class UCanvasPanel* ScoreBoard;
+
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<USingleScore> SingleScoreUI;
+
+	UFUNCTION()
+		void ShowSingleScore(FString Name ,float Score);
+
+private:
 	// Optionally override the Blueprint "Event Construct" event
 	virtual void NativeConstruct() override;
 
@@ -41,12 +56,13 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 	UFUNCTION()
-	void Fire();
+		void Fire();
 
 	UFUNCTION()
-	void Jump();
+		void Jump();
 
-private:
 	ACharacter* MyCharacter;
 	UFire* FireComponent;
+
+	int Order = 0;
 };

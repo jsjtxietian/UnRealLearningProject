@@ -5,10 +5,18 @@
 #include "GameFramework/PlayerState.h"
 #include "GameFramework/Character.h"
 
-UGameUserWidget::UGameUserWidget(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
-{
 
+
+void UGameUserWidget::ShowSingleScore(FString Name, float Score)
+{
+	ScoreBoard->SetRenderOpacity(1);
+
+	USingleScore* Single = Cast<USingleScore>(CreateWidget(UGameplayStatics::GetPlayerController(GetWorld(), 0), SingleScoreUI));
+	Single->Order->SetText(FText::FromString(FString::Printf(TEXT("%02d"), Order++)));
+	Single->Name->SetText(FText::FromString(Name));
+	Single->Score->SetText(FText::FromString(FString::FromInt(int(Score))));
+
+	ScoreArea->AddChild(Single);
 }
 
 void UGameUserWidget::NativeConstruct()
@@ -20,6 +28,8 @@ void UGameUserWidget::NativeConstruct()
 	
 	ShootButton->OnClicked.AddDynamic(this, &UGameUserWidget::Fire);
 	JumpButton->OnClicked.AddDynamic(this, &UGameUserWidget::Jump);
+
+	ScoreBoard->SetRenderOpacity(0);
 }
 
 
@@ -38,4 +48,10 @@ void UGameUserWidget::Fire()
 void UGameUserWidget::Jump()
 {
 	MyCharacter->Jump();
+}
+
+UGameUserWidget::UGameUserWidget(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+
 }

@@ -23,6 +23,20 @@ ACountDown::ACountDown()
 	CountdownTime = 10;
 }
 
+
+// Called when the game starts or when spawned
+void ACountDown::BeginPlay()
+{
+	Super::BeginPlay();
+	UpdateTimerDisplay();
+	GetWorldTimerManager().SetTimer(CountdownTimerHandle, this, &ACountDown::AdvanceTimer, 1.0f, true);
+
+	GameUI = Cast<UGameUserWidget>(CreateWidget(UGameplayStatics::GetPlayerController(GetWorld(), 0), GameUIType));
+	GameUI->SingleScoreUI = SingleScoreUI;
+	GameUI->AddToViewport();
+}
+
+
 void ACountDown::UpdateTimerDisplay()
 {
 	CountdownText->SetText(FString::FromInt(FMath::Max(CountdownTime, 0)) + TEXT("s Left To Shoot!"));
@@ -50,44 +64,40 @@ void ACountDown::CountdownHasFinished()
 
 	const FString SlotName = FString::FromInt(0);
 
+	FSingle Current;
+	Current.PlayerName = GameUI->NameInput->GetText().ToString();
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, Current.PlayerName);
+
+	Current.PlayerScore = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetPlayerState()->GetScore();
 
 	if (UNameScore* LoadedGame = Cast<UNameScore>(UGameplayStatics::LoadGameFromSlot(SlotName, 0)))
 	{
-		// The operation was successful, so LoadedGame now contains the data we saved earlier.
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, TEXT("Load Success"));
-
-		//if (UNameScore* SaveGameInstance = Cast<UNameScore>(UGameplayStatics::CreateSaveGameObject(UNameScore::StaticClass())))
-		//{
-			// Set data on the savegame object.
-		FSingle Current;
-		Current.PlayerName = GameUI->NameInput->Text.ToString();
-		Current.PlayerScore = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetPlayerState()->GetScore();
 		LoadedGame->Saves.Add(Current);
-
-		/*SaveGameInstance->Saves.Sort([](USaveData* A, USaveData* B) {
-			return A->PlayerScore > B->PlayerScore;
-		});*/
+		LoadedGame->Saves.Sort([](FSingle A, FSingle B) {
+			return A.PlayerScore >= B.PlayerScore;
+		});
 
 		// Save the data immediately.
 		if (UGameplayStatics::SaveGameToSlot(LoadedGame, SlotName, 0))
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::SanitizeFloat(LoadedGame->Saves[0].PlayerScore));
-			GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, FString::SanitizeFloat(LoadedGame->Saves.Last().PlayerScore));
+			int Count = 0;
+			for(auto save : LoadedGame->Saves)
+			{
+				GameUI->ShowSingleScore(save.PlayerName, save.PlayerScore);
+				if(++Count > 10)
+					break;
+			}
 		}
-		//}
+	}
+	else
+	{
+		if (UNameScore* SaveGameInstance = Cast<UNameScore>(UGameplayStatics::CreateSaveGameObject(UNameScore::StaticClass())))
+		{
+			SaveGameInstance->Saves.Add(Current);
+			UGameplayStatics::SaveGameToSlot(SaveGameInstance, SlotName, 0);
+		}
 	}
 
-}
-
-// Called when the game starts or when spawned
-void ACountDown::BeginPlay()
-{
-	Super::BeginPlay();
-	UpdateTimerDisplay();
-	GetWorldTimerManager().SetTimer(CountdownTimerHandle, this, &ACountDown::AdvanceTimer, 1.0f, true);
-
-	GameUI = Cast<UGameUserWidget>(CreateWidget(UGameplayStatics::GetPlayerController(GetWorld(), 0), GameUIType));
-	GameUI->AddToViewport();
 }
 
 // Called every frame

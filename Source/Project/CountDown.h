@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GameUserWidget.h"
 #include "TimerManager.h"
+#include "SingleScore.h"
 #include "CountDown.generated.h"
 
 UCLASS()
@@ -18,10 +19,13 @@ public:
 	ACountDown();
 
 	UPROPERTY(EditAnywhere)
-	int32 CountdownTime;
+		int32 CountdownTime;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets") 
-	TSubclassOf<UGameUserWidget> GameUIType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+		TSubclassOf<UGameUserWidget> GameUIType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+		TSubclassOf<USingleScore> SingleScoreUI;
 
 	UGameUserWidget* GameUI;
 
