@@ -1,7 +1,13 @@
 #include "Fire.h"
 #include "Projectile.h"
 #include "GameFramework/Actor.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Components/StaticMeshComponent.h"
+#include "Engine/StaticMesh.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Character.h"
 #include "Components/InputComponent.h"
+#include "Gun47.h"
 
 // Sets default values for this component's properties
 UFire::UFire()
@@ -11,6 +17,7 @@ UFire::UFire()
 	PrimaryComponentTick.bCanEverTick = true;
 
 	// ...
+	
 }
 
 
@@ -22,8 +29,10 @@ void UFire::BeginPlay()
 	auto Input = this->GetOwner()->FindComponentByClass<UInputComponent>();
 	Input->BindAction("Fire", IE_Pressed, this, &UFire::Fire);
 
-	GetOwner()->Tags.AddUnique(TEXT("Player"));
+	AGun47* Gun = GetWorld()->SpawnActor<AGun47>();
+	Gun->AttachToComponent(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GunSocket"));
 
+	GetOwner()->Tags.AddUnique(TEXT("Player"));
 }
 
 void UFire::Fire()

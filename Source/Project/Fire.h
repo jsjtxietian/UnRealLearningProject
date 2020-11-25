@@ -29,6 +29,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 
+	UStaticMeshComponent* GunMesh;
 	bool InPlay = true;
 
 };
