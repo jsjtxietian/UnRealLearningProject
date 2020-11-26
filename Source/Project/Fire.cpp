@@ -40,6 +40,8 @@ void UFire::Fire()
 	if (!InPlay)
 		return;
 
+	FireAnimation();
+
 	// Attempt to fire a projectile.
 	// Get the camera transform.
 	FVector CameraLocation;
@@ -65,6 +67,24 @@ void UFire::Fire()
 			Projectile->FireInDirection(LaunchDirection);
 		}
 	}
+}
+
+void UFire::FireAnimation()
+{
+	if (USkeletalMeshComponent* Mesh = GetOwner()->FindComponentByClass<USkeletalMeshComponent>())
+	{
+		if (UAnimInstance* AnimInst = Mesh->GetAnimInstance())
+		{
+			AnimInst->Montage_Play(GunMontage);
+			//AnimInst->Montage_Play()
+			/*UBoolProperty* AniBool = FindField<UBoolProperty>(AnimInst->GetClass(), TEXT("IsFire"));
+			if (AniBool != NULL)
+			{
+				AniBool->SetPropertyValue_InContainer(AnimInst, IsOn);
+			}*/
+		}
+	}
+
 }
 
 
