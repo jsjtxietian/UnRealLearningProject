@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Gun.h"
 #include "Gun47.generated.h"
 
 UCLASS()
-class PROJECT_API AGun47 : public AActor
+class PROJECT_API AGun47 : public AGun
 {
 	GENERATED_BODY()
 	
@@ -22,7 +23,5 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(VisibleAnywhere)
-		USkeletalMeshComponent* GunMesh;
+	void Fire() override;
 };

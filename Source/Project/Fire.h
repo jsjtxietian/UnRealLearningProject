@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Gun.h"
 #include "Fire.generated.h"
 
 
@@ -19,22 +20,11 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	void Fire();
 
-	// Gun muzzle's offset from the camera location.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		FVector MuzzleOffset;
-	// Gun muzzle's offset from the camera location.
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		UAnimMontage* GunMontage;
-
-	UStaticMeshComponent* GunMesh;
+	AGun* PlayerGun = nullptr;
 	bool InPlay = true;
-
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-private:
-	void FireAnimation();
 
 };
