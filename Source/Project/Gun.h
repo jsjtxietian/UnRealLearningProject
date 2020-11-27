@@ -12,8 +12,6 @@ class PROJECT_API AGun : public AActor
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this actor's properties
-	AGun(const TCHAR* AssetLocation);
 	AGun() { PrimaryActorTick.bCanEverTick = true; };
 
 	// Called every frame
@@ -31,7 +29,7 @@ public:
 	UFUNCTION()
 		virtual void FireAnimation();
 
-	//100 40 -60
+	//50 40 -60
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		FVector MuzzleOffset;
 

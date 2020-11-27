@@ -8,9 +8,20 @@
 
 // Sets default values
 AGun47::AGun47()
-	:AGun(TEXT("/Game/Weapon/Weapons/Meshes/Ka47/SK_KA47"))
 {
 	PrimaryActorTick.bCanEverTick = true;
+
+	GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunKAMesh"));
+	RootComponent = GunMesh;
+
+	static ConstructorHelpers::FObjectFinder<USkeletalMesh> GunAsset(TEXT("/Game/Weapon/Weapons/Meshes/Ka47/SK_KA47"));
+	if (GunAsset.Succeeded())
+	{
+		GunMesh->SetSkeletalMesh(GunAsset.Object);
+		GunMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
+		GunMesh->BodyInstance.SetCollisionProfileName(TEXT("BlockAll"));
+		GunMesh->OnComponentHit.AddDynamic(this, &AGun::OnHit);
+	}
 }
 
 // Called when the game starts or when spawned

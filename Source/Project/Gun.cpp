@@ -6,24 +6,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Fire.h"
 
-// Sets default values
-AGun::AGun(const TCHAR* AssetLocation)
-{
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-
-	GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("GunMesh"));
-
-	static ConstructorHelpers::FObjectFinder<USkeletalMesh> GunAsset(AssetLocation);
-	if (GunAsset.Succeeded())
-	{
-		GunMesh->SetSkeletalMesh(GunAsset.Object);
-		GunMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
-		GunMesh->BodyInstance.SetCollisionProfileName(TEXT("BlockAll"));
-		GunMesh->OnComponentHit.AddDynamic(this, &AGun::OnHit);
-	}
-}
-
 
 void AGun::FireAnimation()
 {
@@ -48,9 +30,16 @@ void AGun::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimiti
 
 	if (name.Contains("Player"))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, name);
-		this->AttachToComponent(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GunSocket"));
+		auto PlayerGun = Player->FindComponentByClass<UFire>()->PlayerGun;
+
+		if (PlayerGun != nullptr)
+		{
+			PlayerGun->Destroy();
+		}
+
 		Player->FindComponentByClass<UFire>()->PlayerGun = this;
+		this->AttachToComponent(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetMesh(), FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GunSocket"));
+		
 		GunMesh->SetNotifyRigidBodyCollision(false);
 		GunMesh->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
 		GunMesh->OnComponentCollisionSettingsChanged();
