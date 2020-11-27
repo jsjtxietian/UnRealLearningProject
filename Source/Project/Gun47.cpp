@@ -4,6 +4,8 @@
 #include "Gun47.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Character.h"
+#include "UObject/ConstructorHelpers.h"
+#include "Components/SkeletalMeshComponent.h"
 #include "Projectile.h"
 
 // Sets default values

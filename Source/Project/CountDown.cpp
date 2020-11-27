@@ -66,7 +66,7 @@ void ACountDown::CountdownHasFinished()
 
 	FSingle Current;
 	Current.PlayerName = GameUI->NameInput->GetText().ToString();
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, Current.PlayerName);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::White, Current.PlayerName);
 
 	Current.PlayerScore = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0)->GetPlayerState()->GetScore();
 

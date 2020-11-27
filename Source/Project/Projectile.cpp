@@ -16,11 +16,11 @@ AProjectile::AProjectile()
 	VisualMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = VisualMesh;
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CubeVisualAsset(TEXT("/Game/StarterContent/Shapes/Shape_Sphere"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> BulletAsset(TEXT("/Game/Weapon/Weapons/Meshes/Ammunition/SM_Shell_40mm_G"));
 
-	if (CubeVisualAsset.Succeeded())
+	if (BulletAsset.Succeeded())
 	{
-		VisualMesh->SetStaticMesh(CubeVisualAsset.Object);
+		VisualMesh->SetStaticMesh(BulletAsset.Object);
 		VisualMesh->SetRelativeLocation(FVector(0.0f, 0.0f, 0.0f));
 
 		VisualMesh->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
@@ -30,7 +30,7 @@ AProjectile::AProjectile()
 	// Use this component to drive this projectile's movement.
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
 	ProjectileMovementComponent->SetUpdatedComponent(VisualMesh);
-	ProjectileMovementComponent->InitialSpeed = 2000.0f;
+	ProjectileMovementComponent->InitialSpeed = 3000.0f;
 	ProjectileMovementComponent->MaxSpeed = 3000.0f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = true;
@@ -42,7 +42,7 @@ AProjectile::AProjectile()
 		ExplosionEffect = PS.Object;
 	}
 
-	SetActorScale3D(FVector(0.2f, 0.2f, 0.2f));
+	//SetActorScale3D(FVector(0.2f, 0.2f, 0.2f));
 }
 
 // Function that initializes the projectile's velocity in the shoot direction.

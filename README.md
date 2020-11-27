@@ -32,3 +32,10 @@
 
 
 
+#### hw4&5
+
+* 完成UI，保存得分
+* 完成开火动画
+* 完成换枪+不同模式
+* 重构代码
+* 视频+apk见最新的release，HW45. https://github.com/jsjtxietian/UnRealLearningProject/releases/tag/HW45
